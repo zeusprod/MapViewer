@@ -1,7 +1,7 @@
 // MapViewer protoype.
 // See http://stackoverflow.com/questions/10866636/actionscript-3-import-svg-file
 // https://github.com/LucasLorentz/AS3SVGRenderer
-package
+package com.zeusprod.mapviewer
 {
     [SWF(width = "1000", height = "800", frameRate = "60", backgroundColor = "#FFFFFF")]
     import com.lorentz.SVG.display.SVGDocument;
