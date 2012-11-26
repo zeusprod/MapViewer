@@ -17,6 +17,7 @@ package com.zeusprod.mapviewer
     import flash.net.URLLoaderDataFormat;
     import flash.net.URLRequest;
     import flash.text.TextField;
+    import flash.text.TextFieldType;
     import flash.utils.Dictionary;
 
     import flashx.textLayout.accessibility.TextAccImpl;
@@ -30,11 +31,18 @@ package com.zeusprod.mapviewer
 
         private static const BASE_PATH:String = "http://upload.wikimedia.org/wikipedia/commons/";
 
+        //http://upload.wikimedia.org/wikipedia/commons/6/6f/Electoral_College_2012.svg
+        //http://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Electoral_College_2012.svg/1000px-Electoral_College_2012.svg.png
+
         private static const SVG_PATH:String = BASE_PATH + "MAPCODE/ElectoralCollegeYYYY.svg";
 
         //private static const PATH_1868:String = "1868GrantSeymour";
 
         //  private static const GRANT_1868:int = 1868;
+
+        private static const PATH_2016:String = "Electoral_College_2012";
+
+        private static const EV_2016:int = 2016;
 
         private static const PNG_PATH:String = BASE_PATH + "thumb/MAPCODE/ElectoralCollegeYYYY.svg/1000px-ElectoralCollegeYYYY.svg.png";
 
@@ -52,7 +60,9 @@ package com.zeusprod.mapviewer
 
         private static const MIN_YEAR:int = YEAR_1789;
 
-        private static const MAX_YEAR:int = 2012;
+        private static const MAX_YEAR:int = 2016;
+
+        private static const INITIAL_YEAR:int = 2012;
 
         private static const FUDGE_OFFSET_X:int = 0;
 
@@ -77,6 +87,8 @@ package com.zeusprod.mapviewer
         private var current:TextField;
 
         private var previous:TextField;
+
+        private var goTo:TextField;
 
         private static const SVG:String = "SVG";
 
@@ -147,6 +159,7 @@ package com.zeusprod.mapviewer
             maps[2004] = "e/e2";
             maps[2008] = "2/24";
             maps[2012] = "4/44";
+            maps[2016] = "6/6f";
             offsets[1972] = { x: FUDGE_OFFSET_X, y: FUDGE_OFFSET_Y };
             offsets[1976] = { x: FUDGE_OFFSET_X, y: FUDGE_OFFSET_Y };
             offsets[1980] = { x: FUDGE_OFFSET_X, y: FUDGE_OFFSET_Y };
@@ -167,8 +180,10 @@ package com.zeusprod.mapviewer
 
             next = new TextField();
             next.text = "NEXT";
+            next.selectable = false;
             previous = new TextField();
             previous.text = "PREVIOUS";
+            previous.selectable = false;
 
             previous.x = OFFSET_X;
             next.x = previous.x + 400;
@@ -178,15 +193,24 @@ package com.zeusprod.mapviewer
             previous.addEventListener(MouseEvent.CLICK, previousYear);
 
             current = new TextField();
-            current.text = String(MAX_YEAR);
+            current.text = String(INITIAL_YEAR);
             current.x = (next.x + previous.x) / 2;
             current.y = next.y;
+            current.type = TextFieldType.INPUT;
+
+            goTo = new TextField();
+            goTo.text = "GO";
+            goTo.selectable = false;
+            goTo.x = (next.x + previous.x) / 2;
+            goTo.y = next.y + 30;
+            goTo.addEventListener(MouseEvent.CLICK, loadMapByYear);
 
             loadMapByYear();
 
             this.addChild(next);
             this.addChild(previous);
             this.addChild(current);
+            this.addChild(goTo);
 
         }
 
@@ -257,8 +281,8 @@ package com.zeusprod.mapviewer
 
         private function createPath(year:int, path:String):String
         {
-            // if (year == GRANT_1868 && format == SVG)
-            //     path = replaceAll(path, ELECTORAL_COLLEGE_YEAR, PATH_1868);
+            if (year == EV_2016)
+                path = replaceAll(path, ELECTORAL_COLLEGE_YEAR, PATH_2016);
             path = replaceAll(path, MAP_PLACEHOLDER, maps[year]);
             path = replaceAll(path, YEAR_PLACEHOLDER, String(year));
             return path;
