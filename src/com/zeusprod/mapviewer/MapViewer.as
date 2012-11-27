@@ -7,6 +7,8 @@ package com.zeusprod.mapviewer
     import com.lorentz.SVG.display.SVGDocument;
     import com.lorentz.processing.ProcessExecutor;
 
+    import com.zeusprod.components.CustomButton;
+
     import flash.display.Loader;
     import flash.display.MovieClip;
     import flash.display.Sprite;
@@ -20,7 +22,6 @@ package com.zeusprod.mapviewer
     import flash.text.TextFieldType;
     import flash.utils.Dictionary;
 
-    import flashx.textLayout.accessibility.TextAccImpl;
 
 
     public class MapViewer extends Sprite
@@ -82,13 +83,13 @@ package com.zeusprod.mapviewer
 
         private var pngLoader:Loader;
 
-        private var next:TextField;
+        private var next:CustomButton;
 
         private var current:TextField;
 
-        private var previous:TextField;
+        private var previous:CustomButton;
 
-        private var goTo:TextField;
+        private var goButton:CustomButton;
 
         private static const SVG:String = "SVG";
 
@@ -178,19 +179,16 @@ package com.zeusprod.mapviewer
             container = new MovieClip();
             this.addChild(container);
 
-            next = new TextField();
-            next.text = "NEXT";
-            next.selectable = false;
-            previous = new TextField();
-            previous.text = "PREVIOUS";
-            previous.selectable = false;
+            next = new CustomButton("NEXT", 35, 20);
+
+            previous = new CustomButton("PREVIOUS", 60, 20);
 
             previous.x = OFFSET_X;
             next.x = previous.x + 400;
             next.y = previous.y = 300;
 
-            next.addEventListener(MouseEvent.CLICK, nextYear);
-            previous.addEventListener(MouseEvent.CLICK, previousYear);
+            next.addEventListener(MouseEvent.MOUSE_UP, nextYear);
+            previous.addEventListener(MouseEvent.MOUSE_UP, previousYear);
 
             current = new TextField();
             current.text = String(INITIAL_YEAR);
@@ -198,19 +196,18 @@ package com.zeusprod.mapviewer
             current.y = next.y;
             current.type = TextFieldType.INPUT;
 
-            goTo = new TextField();
-            goTo.text = "GO";
-            goTo.selectable = false;
-            goTo.x = (next.x + previous.x) / 2;
-            goTo.y = next.y + 30;
-            goTo.addEventListener(MouseEvent.CLICK, loadMapByYear);
+            goButton = new CustomButton("GO", 25, 20);
+            goButton.x = (next.x + previous.x) / 2;
+            goButton.y = next.y + 30;
+
+            goButton.addEventListener(MouseEvent.MOUSE_UP, loadMapByYear);
 
             loadMapByYear();
 
             this.addChild(next);
             this.addChild(previous);
             this.addChild(current);
-            this.addChild(goTo);
+            this.addChild(goButton);
 
         }
 
